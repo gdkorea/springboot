@@ -29,7 +29,7 @@
 				</li>
 				<li class="nav-item"><a class="nav-link" href="/form.html">회원가입</a> 
 				</li>
-				<li class="nav-item"><a class="nav-link" href="/list.html">사용자목록</a>
+				<li class="nav-item"><a class="nav-link" href="/list">사용자목록</a>
 				</li>
 
 			</ul>
@@ -49,16 +49,13 @@
 			</tr>
 		</thead>
 		<tbody>
+			{{#users}}
 			<tr>
-				<th scope="row">javajigi</th>
-				<th>자바지기</th>
-				<th>javajigi@a.com</th>
+				<th scope="row">{{userId}}</th>
+				<th>{{name}}</th>
+				<th>{{email}}</th>
 			</tr>
-			<tr>
-				<th scope="row">whoareu</th>
-				<th>누구니</th>
-				<th>whoru@gmail.com</th>
-			</tr>
+			{{/users}}
 		</tbody>
 		
 		</table>
