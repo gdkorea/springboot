@@ -24,7 +24,6 @@ public class UserController {
 	@Autowired
 	private UserRepository userRepository;
 	
-	
 	@GetMapping("/loginForm")
 	public String loginform()
 	{
@@ -38,22 +37,31 @@ public class UserController {
 		User user =  userRepository.findByUserId(userId);
 		if(user == null)
 		{
-			System.out.println("Login Failure");
+			System.out.println("Login Failure1");
 			return "redirect:/users/loginForm";
 		}
 		
-		if(!password.equals(user.getPassword()))
+		System.out.println(password);
+		System.out.println(user.matchPassword(password));
+		
+		if(!user.matchPassword(password))
 		{
-			System.out.println("Login Failure");
+			System.out.println("Login Failure2");
 			return "redirect:/users/loginForm";
 		}
 		
 		System.out.println("Login Success");
-		session.setAttribute("user", user);
+		session.setAttribute(HttpSessionUtils.USER_SESSION_KEY, user);
 		
 		return "redirect:/";
 	}
 	
+	@GetMapping("/logout")
+	public String logout(HttpSession session)
+	{
+		session.removeAttribute(HttpSessionUtils.USER_SESSION_KEY);
+		return "redirect:/";
+	}
 	
 	
 	@PostMapping("")
@@ -79,18 +87,44 @@ public class UserController {
 	
 	
 	@GetMapping("/{id}/form")
-	public String updateform(@PathVariable Long id, Model model)
+	public String updateform(@PathVariable Long id, Model model,HttpSession session)
 	{
+		
+		if(!HttpSessionUtils.isLoginUser(session))
+		{
+			return "redirect:/users/login";
+		}
+		
+		User sessionedUser = (User)HttpSessionUtils.getUserFromSession(session);
+	
+		if(!sessionedUser.matchId(id)) {
+			throw new IllegalStateException("you can modify yours");
+		}
+
+		
 		User user =  userRepository.findById(id).get();
 		model.addAttribute("user", user);
 		return "/user/updateform";
 	}
 	
 	@PutMapping("/{id}")
-	public String Update(@PathVariable Long id, User newUser)
+	public String Update(@PathVariable Long id, User updatedUser, HttpSession session)
 	{
+		
+		if(!HttpSessionUtils.isLoginUser(session))
+		{
+			return "redirect:/users/login";
+		}
+		
+		User sessionedUser = (User)HttpSessionUtils.getUserFromSession(session);
+		
+		if(!sessionedUser.matchId(id))
+		{
+			throw new IllegalStateException("you can modify yours");
+		}
+
 		User user =  userRepository.findById(id).get();
-		user.update(newUser);
+		user.update(updatedUser);
 		userRepository.save(user);
 		return "redirect:/users";
 	}
