@@ -41,8 +41,6 @@ public class UserController {
 			return "redirect:/users/loginForm";
 		}
 		
-		System.out.println(password);
-		System.out.println(user.matchPassword(password));
 		
 		if(!user.matchPassword(password))
 		{

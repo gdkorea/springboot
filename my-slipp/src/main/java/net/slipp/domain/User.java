@@ -27,12 +27,11 @@ public class User {
 	}
 	
 	public boolean matchId(Long newId) {
-		if (id == newId) {
+		if (id.equals(newId)) {
 			return true;
 		} else {
 			return false;
 		}
-
 	}
 
 	public String getUserId() {
@@ -52,7 +51,8 @@ public class User {
 	}
 
 	public boolean matchPassword(String newPassword) {
-		if (password == newPassword) {
+		
+		if (password.equals(newPassword)) {
 			return true;
 		} else {
 			return false;
